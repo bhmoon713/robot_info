@@ -1,4 +1,4 @@
-#include "robot_info_class.cpp"  // ✅ Include base class
+#include "robot_info_class.cpp"  // ✅ Include base class directly
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "robot_info_node");
