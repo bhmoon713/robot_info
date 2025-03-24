@@ -1,20 +1,24 @@
 #include "robot_info_class.cpp"  // ✅ Include base class
+#include "hydraulic_system_monitor.cpp"  // ✅ Include hydraulic monitor class
 
 class AGVRobotInfo : public RobotInfo {
 private:
     std::string max_payload;
+    HydraulicSystemMonitor hydraulicMonitor;  // ✅ Composition: Adding Hydraulic System Monitor
 
 public:
-    // ✅ Constructor
-    AGVRobotInfo(std::string description, std::string serial, std::string ip, std::string firmware, std::string payload)
-        : RobotInfo(description, serial, ip, firmware), max_payload(payload) {}
+    // ✅ Constructor with hydraulic system data
+    AGVRobotInfo(std::string description, std::string serial, std::string ip, std::string firmware, std::string payload,
+                 std::string temp, std::string fill_level, std::string pressure)
+        : RobotInfo(description, serial, ip, firmware), max_payload(payload),
+          hydraulicMonitor(temp, fill_level, pressure) {}
 
     // ✅ Override `publish_data()`
     void publish_data() override {
         msg.data_field_05 = "maximum_payload: " + max_payload;
-        msg.data_field_06 = "";  // Empty fields
-        msg.data_field_07 = "";
-        msg.data_field_08 = "";
+        msg.data_field_06 = hydraulicMonitor.getOilTemperature();
+        msg.data_field_07 = hydraulicMonitor.getTankFillLevel();
+        msg.data_field_08 = hydraulicMonitor.getOilPressure();
         msg.data_field_09 = "";
         msg.data_field_10 = "";
 
